@@ -1,3 +1,4 @@
+import asyncio
 import sys
 from pathlib import Path
 
@@ -9,5 +10,5 @@ nest_asyncio.apply()
 from app.ai.decide import decide
 
 question = "I want my money back, this is ridiculous"
-decision = decide(question)
+decision = asyncio.run(decide(question))
 print(decision.model_dump_json(indent=2))

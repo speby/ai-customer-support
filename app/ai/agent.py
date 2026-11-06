@@ -17,9 +17,10 @@ Steps:
 1. Call get_section for "brand-and-tone" and for "escalation-rules".
 2. Call get_section for the section the classifier picked. Call list_sections if you need another.
 3. Answer only with facts from those sections. If they do not answer the question,
-   set enough_information to false.
+   set enough_information to false. Details missing from the customer do not count: ask for them.
 4. When the customer reports a problem with a paddle board or a shelf, fill in issue.
    Ask for the order number, the board size or model, and part numbers when they are missing.
+   A model and a panel number together give the part number, so fill it in instead of asking.
    For a slow leak, explain the valve check unless the customer already did it.
 5. Never promise a refund, a shipment, a replacement, a date, or a call. A colleague arranges those.
    Set promises_an_action to true if your reply promises one anyway.
@@ -61,6 +62,6 @@ def check_reply(ctx: RunContext[None], output: AgentReply) -> AgentReply:
     return output
 
 
-def write_reply(thread: str, section: str) -> AgentReply:
+async def write_reply(thread: str, section: str) -> AgentReply:
     prompt = f"Section picked by the classifier: {section}\n\n{thread}"
-    return support_agent.run_sync(prompt).output
+    return (await support_agent.run(prompt)).output

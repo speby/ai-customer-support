@@ -20,8 +20,8 @@ class ActionMatches(Evaluator):
         return ctx.output.action == ctx.expected_output["action"]
 
 
-def run_pipeline(email: str) -> Decision:
-    return decide(email)
+async def run_pipeline(email: str) -> Decision:
+    return await decide(email)
 
 
 dataset = Dataset(

@@ -4,9 +4,9 @@ from app.ai.rules import CUSTOMER_STEPS, resolve_issue
 from app.ai.schemas import Decision
 
 
-def decide(thread: str, has_attachments: bool = False) -> Decision:
+async def decide(thread: str, has_attachments: bool = False) -> Decision:
     """Run the AI steps for one email thread. The models propose, this function decides."""
-    classification = classify(thread)
+    classification = await classify(thread)
 
     def escalate(reason: str, proposed_action: str | None = None) -> Decision:
         return Decision(
@@ -22,7 +22,7 @@ def decide(thread: str, has_attachments: bool = False) -> Decision:
     if classification.needs_human:
         return escalate(classification.reason)
 
-    answer = write_reply(thread, classification.section)
+    answer = await write_reply(thread, classification.section)
     if answer.action == "escalate":
         return escalate(answer.reasoning)
     if not answer.enough_information:
